@@ -5,7 +5,9 @@ The data used can be downloaded from HuggingFace
 set as our test set and split the train set 90-10 to make a new train and
 development set which we use to get the best hyperparameters.
 
-The GLUE benchmark was introduced by [Wang et al. 2019](https://openreview.net/pdf?id=rJ4km2R5t7).
+The GLUE benchmark was introduced by [Wang et al. 2019](https://openreview.net/pdf?id=rJ4km2R5t7) in the paper
+GLUE: A Multi-Task Benchmark and Analysis
+Platform for Natural Language Understanding.
 
 The train_glue.py file was adapted from the finetune_classification.py file 
 from  [here](https://github.com/babylm/evaluation-pipeline) (the BabyLM github).
