@@ -89,6 +89,7 @@ def main():
     parser.add_argument("--word_dropout", action="store", type=float, default=0.0)
     parser.add_argument("--label_smoothing", action="store", type=float, default=0.1)
     parser.add_argument("--epochs", action="store", type=int, default=10)
+    parser.add_argument("--num_warmup_steps", action="store", type=int, default=250)
     parser.add_argument("--seed", action="store", type=int, default=42)
     parser.add_argument("--dataset", action="store", type=str, default="en_ewt-ud")
     parser.add_argument("--language", action="store", type=str, default="english")
@@ -157,7 +158,7 @@ def main():
             return max(min_factor, min_factor + (1 - min_factor) * 0.5 * (1.0 + math.cos(math.pi * progress)))
         return torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
 
-    scheduler = cosine_schedule_with_warmup(optimizer, 250, args.epochs * len(train_loader), 0.1)
+    scheduler = cosine_schedule_with_warmup(optimizer, args.num_warmup_steps, args.epochs * len(train_loader), 0.1)
 
     # train loop
     global_step = 1
