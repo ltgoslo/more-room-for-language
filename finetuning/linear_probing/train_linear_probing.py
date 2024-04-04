@@ -80,6 +80,7 @@ def main():
     parser.add_argument("--model", default="base_paraphrase_patched_frozen")
     parser.add_argument("--model_path", default="pretrain/hugging_models/base_paraphrase_patched")
     parser.add_argument("--hidden_size", action="store", type=int, default=768)
+    parser.add_argument("--num_layers", action="store", type=int, default=12)
     parser.add_argument("--batch_size", action="store", type=int, default=32)
     parser.add_argument("--lr", action="store", type=float, default=0.001)
     parser.add_argument("--beta", action="store", type=float, default=0.0)
