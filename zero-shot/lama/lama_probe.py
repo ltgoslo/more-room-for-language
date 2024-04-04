@@ -1,16 +1,13 @@
-from transformers import AutoTokenizer, AutoModelForMaskedLM
-from modeling_ltgbert import LtgBertForMaskedLM
-import torch
-import logging
-import argparse
-from tqdm import tqdm
-import os
-import numpy as np
-import random
 from cloze_dataset import ClozeDataset
 from torch.utils.data import DataLoader
+from tqdm import tqdm
+from transformers import AutoModelForMaskedLM
 from typing import List, Dict
-
+import argparse
+import logging
+import numpy as np
+import random
+import torch
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
@@ -20,8 +17,8 @@ def parse_args() -> argparse.ArgumentParser:
     parser.add_argument('--batch_size', type=int, default=16,
                         help='The batch size to use during probing')
     parser.add_argument('--model_name', type=str,
-                        default='ltg/bnc-bert-span', help='The pretrained model to use')
-    parser.add_argument('--subset', type=str, default='Squad',
+                        default='davda54/wiki-retrieval-25-patch-base', help='The pretrained model to use')
+    parser.add_argument('--subset', type=str, default='data/ConceptNet/test_special.jsonl',
                         help='The subset of LAMA to probe on')
     parser.add_argument('--seed', type=int, default=42, help='The rng seed')
     parser.add_argument('--k', type=int, default=100, help='p @ k value')
@@ -89,7 +86,6 @@ def probe(args, probing_model, tokenizer, data_loader) -> None:
         input_ids_batch = input_ids.to(device)
         attention_mask_batch = attention_masks.to(device)
         metrics_element = {}
-
         # Get predictions from models
         outputs = probing_model(
             input_ids_batch, attention_mask=attention_mask_batch).logits
@@ -101,13 +97,8 @@ def probe(args, probing_model, tokenizer, data_loader) -> None:
             metrics_element['MRR'] = 0.0
             if mask_idx[i] == -1:
                 continue  # No MASK found in tokenized dataset. See dataset class
-
             topk_tokens = topk(prediction_scores, mask_idx[i], k=precision_at_k, tokenizer=tokenizer)[
                 :precision_at_k]
-            
-            #print(labels[i])
-            #print(topk_tokens)
-
             try:
                 rank = topk_tokens.index(labels[i])
                 metrics_element['MRR'] = (1 / (rank + 1))
@@ -117,8 +108,7 @@ def probe(args, probing_model, tokenizer, data_loader) -> None:
                     metrics_element['P_AT_10'] = 1
                 if rank == 0:
                     metrics_element['P_AT_1'] = 1
-
-            except:
+            except Exception as e:
                 metrics_element['rank'] = f'not found in top {precision_at_k} words'
 
             metrics_elements.append(metrics_element)
@@ -135,18 +125,11 @@ def probe(args, probing_model, tokenizer, data_loader) -> None:
 
 def main(args):
     logging.info('========== Loaded LAMA probe evaluation ==========')
-    assert args.subset.lower() in ['squad', 'conceptnet', 'trex', 'google_re']
-    test_dataset = ClozeDataset(
-        '../data/lama_data/ConceptNet/test_special.jsonl', tokenizer_path_or_name=args.model_name)
+    test_dataset = ClozeDataset(args.subset, tokenizer_path_or_name=args.model_name)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
-    if "ltg" in args.model_name:
-        probing_model = LtgBertForMaskedLM.from_pretrained(
-            args.model_name).to(device)
-    else:
-        probing_model = AutoModelForMaskedLM.from_pretrained(
+    probing_model = AutoModelForMaskedLM.from_pretrained(
             args.model_name, trust_remote_code=True).to(device)
     logging.info(test_dataset.OOV_words)
-
     probe(args, probing_model, test_dataset.tokenizer, test_loader)
 
 

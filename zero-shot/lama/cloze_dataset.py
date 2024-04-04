@@ -1,9 +1,7 @@
-import torch
 from torch.utils.data import Dataset
-import json
-import pandas as pd
 from transformers import AutoTokenizer
-import numpy as np
+import pandas as pd
+import torch
 
 
 class ClozeDataset(Dataset):
@@ -26,7 +24,7 @@ class ClozeDataset(Dataset):
         texts = []
         self.OOV_words = 0
         for label, text in zip(df["obj_label"], df["masked_sentences"]):  # Skip OOV words
-            # Important note: As in Petroni et al (2019), we limit the object labels to those exisiting in the intersection of all evaluated models vocabulary.
+            # Important note: As in Petroni et al (2019), we limit the object labels to those exisiting in the vocab.
             if label in vocab.keys() or 'Ġ' + label in vocab.keys():
                 self.labels.append(label)
                 t = text[0] if not trex_mode else text
@@ -47,7 +45,7 @@ class ClozeDataset(Dataset):
         for i, x in enumerate(self.features["input_ids"]):
             try:
                 self.mask_idx.append(x.index(self.tokenizer.mask_token_id))
-            except:
+            except Exception as e:
                 self.mask_idx.append(-1)
 
     def __len__(self):
@@ -63,5 +61,3 @@ class ClozeDataset(Dataset):
 if __name__ == '__main__':
     set = ClozeDataset("../data/lama_data/Squad/test_special.jsonl")
     print(set[3])
-    #for i in range(0, 20):
-        #print(set.get_decoded_example(i))
