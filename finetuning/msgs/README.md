@@ -31,7 +31,7 @@ Example run:
 python train_msgs.py \
   --model_name "MODEL_NAME" \
   --data_dir "PATH_TO_DATA_DIRECTORY" \
-  --output_dir "OUTPUT_DIR"
+  --output_dir "OUTPUT_DIR" \
   --test_split "TEST_SPLIT" \
   --learning_rate LR
 ```
