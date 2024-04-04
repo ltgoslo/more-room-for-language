@@ -18,7 +18,7 @@ def parse_arguments():
     
     # Optinal Parameters
     parser.add_arguments("--verbose", action=argparse.BooleanOptionalAction, default=False, help="Outputs the prompt, answer and prediction of the model. Stops after num_prompts prompts.")
-    parser.add_arguments("--num_prompts, default=10, type=int, help="Number of verbose prompts to output. Only used when verbose is True.")
+    parser.add_arguments("--num_prompts", default=10, type=int, help="Number of verbose prompts to output. Only used when verbose is True.")
 
     args = parser.parse_args()
 
