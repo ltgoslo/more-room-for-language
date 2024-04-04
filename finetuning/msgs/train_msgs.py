@@ -45,6 +45,8 @@ def parse_args() -> argparse.ArgumentParser:
                         help="Weight Decay to apply to the AdamW optimizer.")
     parser.add_argument("--data_dir", type=str, default="./data/datasets",
                         help="Location of the directory containing the MSGS dataset.")
+    parser.add_argument("--output_dir", type=str, default="results",
+                        help="Location of the results directory to output the results to.")
     parser.add_argument("--seq_length", type=int, default=128,
                         help="Maximum sequence length.")
     parser.add_argument("--epochs", type=int, default=5,
@@ -230,7 +232,7 @@ if __name__ == "__main__":
         })
         progress_bar.close()
 
-        with open(f"results/{args.model_name.split('/')[-1]}__{args.seed}__{args.learning_rate}__{args.test_split}.txt", "a") as f:
+        with open(f"{args.output_dir}/{args.model_name.split('/')[-1]}__{args.seed}__{args.learning_rate}__{args.test_split}.txt", "a") as f:
             f.write(f"{args.task}: {eval_mcc}\n")
 
         wandb.finish()
