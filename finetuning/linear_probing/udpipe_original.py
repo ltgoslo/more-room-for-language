@@ -146,11 +146,11 @@ class Model(nn.Module):
 
         self.dropout = nn.Dropout(args.dropout)
         self.layer_norm = nn.LayerNorm(args.hidden_size, elementwise_affine=False)
-        self.upos_layer_score = nn.Parameter(torch.zeros(13, dtype=torch.float))
-        self.xpos_layer_score = nn.Parameter(torch.zeros(13, dtype=torch.float))
-        self.feats_layer_score = nn.Parameter(torch.zeros(13, dtype=torch.float))
-        self.lemma_layer_score = nn.Parameter(torch.zeros(13, dtype=torch.float))
-        self.dep_layer_score = nn.Parameter(torch.zeros(13, dtype=torch.float))
+        self.upos_layer_score = nn.Parameter(torch.zeros(args.num_layers+1, dtype=torch.float))
+        self.xpos_layer_score = nn.Parameter(torch.zeros(args.num_layers+1, dtype=torch.float))
+        self.feats_layer_score = nn.Parameter(torch.zeros(args.num_layers+1, dtype=torch.float))
+        self.lemma_layer_score = nn.Parameter(torch.zeros(args.num_layers+1, dtype=torch.float))
+        self.dep_layer_score = nn.Parameter(torch.zeros(args.num_layers+1, dtype=torch.float))
 
         self.lemma_classifier = Classifier(args.hidden_size, len(dataset.lemma_vocab), args.dropout)
         self.upos_classifier = Classifier(args.hidden_size, len(dataset.upos_vocab), args.dropout) if len(dataset.upos_vocab) > 2 else ZeroClassifier()

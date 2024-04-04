@@ -103,7 +103,7 @@ def main():
     seed_everything(args.seed)
 
     if args.log_wandb:
-        wandb.init(name=f"{args.model}_{args.dataset}", config=args, project="POS_experiment", entity="ltg")
+        wandb.init(name=f"{args.model}_{args.dataset}", config=args, project="PROJECT_NAME", entity="USERNAME")
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
