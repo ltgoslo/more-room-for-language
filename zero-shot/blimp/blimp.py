@@ -20,9 +20,9 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
 
     # Required parameters
-    parser.add_argument("--input_path", default="data", type=str, help="Path to BLiMP.")
-    parser.add_argument("--model_name", default="davda54/wiki-no-retrieval-base", type=str, help="The initial checkpoint to start training from.")
-    parser.add_argument("--batch_size", default=64, type=int)
+    parser.add_argument("--input_path", default="data", type=str, help="Path to BLiMP data directory.")
+    parser.add_argument("--model_name", default="davda54/wiki-no-retrieval-base", type=str, help="The HuggingFace model name or local path to a HuggingFace implementation of the model.")
+    parser.add_argument("--batch_size", default=64, type=int, help="Batch size to use during inference.")
 
     args = parser.parse_args()
 
@@ -38,7 +38,7 @@ def evaluate(model, tokenizer, device, args):
     linguistics_term_count = {"correct": [Counter() for _ in range(temperatures.size(0))], "total": [Counter() for _ in range(temperatures.size(0))]}
 
 
-    # iterate through all .jsonl files in ./data/ directory
+    # iterate through all .jsonl files in data directory
     for filename in os.listdir(args.input_path):
         if not filename.endswith(".jsonl"):
             continue

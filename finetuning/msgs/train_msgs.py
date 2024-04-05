@@ -34,20 +34,29 @@ def parse_args() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description='Details for msgs')
     parser.add_argument('--batch_size', type=int, default=16,
-                        help='The batch size to use during probing')
+                        help='The batch size to use during finetuning')
     parser.add_argument("--learning_rate", type=float, default=1e-5,
                         help="Maximum learning rate")
     parser.add_argument('--model_name', type=str,
                         default='davda54/wiki-retrieval-patch-base', help='The pretrained model to use')
-    parser.add_argument('--seed', type=int, default=42, help='The rng seed')
-    parser.add_argument("--weight_decay", type=float, default=0.1)
-    parser.add_argument("--data_dir", type=str, default="./data/datasets")
-    parser.add_argument("--seq_length", type=int, default=128)
-    parser.add_argument("--epochs", type=int, default=5)
-    parser.add_argument("--warmup_ratio", type=float, default=0.06)
-    parser.add_argument("--adam_epsilon", type=float, default=1e-8)
-    parser.add_argument("--task", type=str, default="control_raising_absolute_token_position")
-    parser.add_argument("--test_split", type=str, default="out_unmixed")
+    parser.add_argument('--seed', type=int, default=42,
+                        help='The RNG seed')
+    parser.add_argument("--weight_decay", type=float, default=0.1,
+                        help="Weight Decay to apply to the AdamW optimizer.")
+    parser.add_argument("--data_dir", type=str, default="./data/datasets",
+                        help="Location of the directory containing the MSGS dataset.")
+    parser.add_argument("--output_dir", type=str, default="results",
+                        help="Location of the results directory to output the results to.")
+    parser.add_argument("--seq_length", type=int, default=128,
+                        help="Maximum sequence length.")
+    parser.add_argument("--epochs", type=int, default=5,
+                        help="Number of fine-tuning epochs.")
+    parser.add_argument("--warmup_ratio", type=float, default=0.06,
+                        help="Percentage of warmup steps.")
+    parser.add_argument("--adam_epsilon", type=float, default=1e-8,
+                        help="Value of epsilon for the AdamW optimizer.")
+    parser.add_argument("--test_split", type=str, default="out_unmixed",
+                        "The test split to use")
 
 
 
@@ -223,7 +232,7 @@ if __name__ == "__main__":
         })
         progress_bar.close()
 
-        with open(f"results/{args.model_name.split('/')[-1]}__{args.seed}__{args.learning_rate}__{args.test_split}.txt", "a") as f:
+        with open(f"{args.output_dir}/{args.model_name.split('/')[-1]}__{args.seed}__{args.learning_rate}__{args.test_split}.txt", "a") as f:
             f.write(f"{args.task}: {eval_mcc}\n")
 
         wandb.finish()
