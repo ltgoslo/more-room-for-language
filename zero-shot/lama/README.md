@@ -12,7 +12,7 @@ reproduce our results, you would first have to replace all " [MASK]" with
 
 For ease of use, we provide a script ```download_and_process.sh``` that
 downloads the data files and processes the files corretly. This creates two
-directories, where the remasked directory one to be used for benchmarking
+directories, where the remasked directory can be used for evaluating
 LTG-BERT type model.
 
 Example run:
