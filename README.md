@@ -21,7 +21,7 @@ _______
 
 <br>
 
-## Please cite the following publication (just arXiv for now)
+## Please cite the following publication
 ```bibtex
 @inproceedings{samuel-etal-2024-room,
     title = "More room for language: Investigating the effect of retrieval on language models",
